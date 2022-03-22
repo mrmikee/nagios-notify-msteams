@@ -1,0 +1,131 @@
+{% extends "base.json.jinja" %}
+
+{# SvcState: "OK", "WARNING", "UNKNOWN", or "CRITICAL" #}
+{# Color: GOOD, WARN, ATTENTION #}
+{% set state_color = {'OK':'good', 'UNKNOWN':'warning', 'WARNING':'warning', 'CRITICAL':'attention'} %}
+
+
+{# REMEMBER: text fields are MarkDown formatted in MS-Teams by default!!! #}
+{% block content %}
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.3",
+    "body": [
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": "stretch",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "**{{ NOTIFICATIONTYPE }}**",
+                            "size": "Small",
+                            "horizontalAlignment": "Left",
+                            "spacing": "None",
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "**Service:** [{{SERVICEDESC}}]({{nagios_url}}/extinfo.cgi?type=2&host={{HOSTNAME}}&service={{SERVICEDESC}})",
+                            "size": "Default",
+                            "color": "Accent",
+                            "horizontalAlignment": "Left",
+                            "spacing": "Small",
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "size": "Default",
+                            "color": "Accent",
+                            "spacing": "None",
+                            "text": "on [{{HOSTNAME}}]({{nagios_url}}/status.cgi?navbarsearch=1&host={{HOSTNAME}}*)"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "size": "Large",
+                            "color": "Accent",
+                            "spacing": "None",
+                            "text": "Priority: **{{ _HOSTRESTORE_PRIORITY }}**"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "**Host Notes:** {{HOSTNOTES}}",
+                            "size": "Default",
+                            "horizontalAlignment": "Left",
+                            "spacing": "Small",
+                            "wrap": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Status",
+                            "horizontalAlignment": "Right",
+                            "isSubtle": true,
+                            "wrap": true,
+                            "size": "Default"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{SERVICESTATE}}",
+                            "horizontalAlignment": "Right",
+                            "spacing": "None",
+                            "size": "Large",
+                            "color": "{{ state_color[SERVICESTATE] }}",
+                            "wrap": true
+                        }
+                    ]
+                }
+            ]
+        }{% if NOTIFICATIONCOMMENT is defined %}{% if NOTIFICATIONCOMMENT != None %},
+        {
+            "type": "Container",
+            "separator": true,
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "**{{ NOTIFICATIONAUTHOR }}'s comments:**\n\n{{ NOTIFICATIONCOMMENT }}",
+                    "wrap": true
+                }
+            ]
+        }{% endif %}{% endif %}
+    ],
+    "speak": "<s>Service {{SERVICEDESC}} on host {{HOSTNAME}} is {{SERVICESTATE}}</s>",
+    "actions": [
+        {
+            "type": "Action.OpenUrl",
+            "title": "View/Acknowledge",
+            "url": "{{nagios_url}}/extinfo.cgi?type=2&host={{HOSTNAME}}&service={{SERVICEDESC}}"
+        },
+        {
+            "type": "Action.OpenUrl",
+            "title": "Send Notification",
+            "url": "{{nagios_url}}/cmd.cgi?cmd_typ=160&host={{HOSTNAME}}&service={{SERVICEDESC}}"
+        },
+        {
+            "type": "Action.ShowCard",
+            "title": "Show Nagios Output",
+            "card": {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "wrap": true,
+                        "text": "**Nagios Output:**\n\n{{ SERVICEOUTPUT }}"
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+            }
+        }
+    ]
+}
+
+{% endblock %}
+

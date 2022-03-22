@@ -1,0 +1,7 @@
+{
+    "@type": "MessageCard",
+    "@context": "https://schema.org/extensions",
+    "text": "Notification Type: {{ NOTIFICATIONTYPE }}\n\nRESTORE PRIORITY: {{ _HOSTRESTORE_PRIORITY }}\n\nHost: {{ HOSTNAME }} ({{ HOSTADDRESS }})\n\nState: {{ HOSTSTATE }}\n\nNagios output:\n\n{{ HOSTOUTPUT }}\n\n---\n\n**NCONF Note:** {{ HOSTNOTES }}\n\n**{{NOTIFICATIONAUTHOR}} comment:** {{ NOTIFICATIONCOMMENT }}",
+    "summary": "Host notice",
+    "title": "HOST notification"
+}
