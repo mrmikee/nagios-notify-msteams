@@ -18,7 +18,7 @@ I'm using Python with Jinja2 templates to send Simple messages and [Microsoft's 
 
 ```bash
 # clone the repo
-git clone ....
+git clone https://github.com/mrmikee/nagios-notify-msteams.git
 
 # install python requirements
 pip3 install -r requirements.txt
