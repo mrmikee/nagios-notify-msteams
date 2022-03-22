@@ -74,7 +74,7 @@ def main():
 
     # get the Jinja template for "HOST" or "SERVICE"
     t = env.get_template(nag_template.get(message_type))
-    message_json = t.render(mymacros=macros, **macros)
+    message_json = t.render(**macros)
     if debug:
         print(message_json + '\n\n--> ' + current_time )
     send_to_teams(url, message_json, debug)
