@@ -27,9 +27,6 @@ nag_template = {
     # 'SERVICE' : 'service_simple.json.jinja',
 }
 
-# NOTIFICATIONTYPE
-# notification_types = ("CUSTOM", "PROBLEM", "RECOVERY", "ACKNOWLEDGEMENT", "FLAPPINGSTART", "FLAPPINGSTOP", "FLAPPINGDISABLED", "DOWNTIMESTART", "DOWNTIMEEND", "DOWNTIMECANCELLED")
-
 def _get_nagios_macros():
     """Read all ENV vars then save and rename the Nagios Macros in a dictionary."""
     MACROS=dict()
